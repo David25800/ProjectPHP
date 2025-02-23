@@ -1,0 +1,9 @@
+version: '2'
+services:
+  php-app:
+    image: myphpapp
+    build: .
+    ports:
+      - "8080:80"
+    restart: always
+
