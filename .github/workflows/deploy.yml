@@ -29,10 +29,13 @@ jobs:
         ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no adminuser@137.117.254.63 << 'EOF'
         # Ensure Docker is installed
         sudo apt update && sudo apt install -y docker.io
-        
+
         # Stop and remove old container if running
         docker stop myphpapp || true
         docker rm myphpapp || true
+
+        # Remove old images to free up space (optional)
+        docker rmi myphpapp:latest || true
 
         # Navigate to project directory
         cd ~/myphpapp
