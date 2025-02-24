@@ -1,0 +1,33 @@
+name: CI/CD Pipeline for PHP App
+
+on:
+  push:
+    branches:
+      - main  # Runs when code is pushed to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set Up SSH Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan 137.117.254.63 >> ~/.ssh/known_hosts
+
+    - name: Deploy Application
+      run: |
+        scp -r ./* adminuser@137.117.254.63:~/myphpapp/
+        ssh adminuser@137.117.254.63 << 'EOF'
+        sudo apt update && sudo apt install -y docker.io
+        cd ~/myphpapp
+        docker stop myphpapp || true
+        docker rm myphpapp || true
+        docker build -t myphpapp:latest .
+        docker run -d -p 80:80 --name myphpapp myphpapp:latest
+        EOF
