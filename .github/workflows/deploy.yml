@@ -1,33 +1,43 @@
-name: CI/CD Pipeline for PHP App
+name: Deploy to Azure VM
 
 on:
   push:
     branches:
-      - main  # Runs when code is pushed to main
+      - main  # Runs when code is pushed to 'main'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set Up SSH Key
+    - name: Set up SSH Key
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan 137.117.254.63 >> ~/.ssh/known_hosts
+        ssh-keyscan -H 137.117.254.63 >> ~/.ssh/known_hosts
 
-    - name: Deploy Application
+    - name: Deploy files to VM
       run: |
-        scp -r ./* adminuser@137.117.254.63:~/myphpapp/
-        ssh adminuser@137.117.254.63 << 'EOF'
+        scp -i ~/.ssh/id_rsa -r ./* adminuser@137.117.254.63:~/myphpapp/
+
+    - name: Deploy Docker Container on VM
+      run: |
+        ssh -i ~/.ssh/id_rsa adminuser@137.117.254.63 << 'EOF'
+        # Ensure Docker is installed
         sudo apt update && sudo apt install -y docker.io
-        cd ~/myphpapp
+        
+        # Stop and remove old container
         docker stop myphpapp || true
         docker rm myphpapp || true
+
+        # Navigate to project directory
+        cd ~/myphpapp
+
+        # Build and run the Docker container
         docker build -t myphpapp:latest .
         docker run -d -p 80:80 --name myphpapp myphpapp:latest
         EOF
