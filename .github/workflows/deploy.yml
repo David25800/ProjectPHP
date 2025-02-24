@@ -16,21 +16,21 @@ jobs:
     - name: Set up SSH Key
       run: |
         mkdir -p ~/.ssh
-        echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.VM_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H 137.117.254.63 >> ~/.ssh/known_hosts
 
     - name: Deploy files to VM
       run: |
-        scp -i ~/.ssh/id_rsa -r ./* adminuser@137.117.254.63:~/myphpapp/
+        scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ./* adminuser@137.117.254.63:~/myphpapp/
 
     - name: Deploy Docker Container on VM
       run: |
-        ssh -i ~/.ssh/id_rsa adminuser@137.117.254.63 << 'EOF'
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no adminuser@137.117.254.63 << 'EOF'
         # Ensure Docker is installed
         sudo apt update && sudo apt install -y docker.io
         
-        # Stop and remove old container
+        # Stop and remove old container if running
         docker stop myphpapp || true
         docker rm myphpapp || true
 
