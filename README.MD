@@ -1,8 +1,8 @@
 Project: Automated Cloud Deployment with Terraform, Ansible, Docker, and Git Action
 Overview
-This project uses a Docker container and a sample PHP web application to automatically deploy a cloud-based server. It includes CI/CD pipelines using GitHub Actions, Terraform for infrastructure provisioning, and Ansible for configuration management.
+This project demonstrates the use a Docker container and a sample PHP web application to automatically deploy a cloud-based server. It includes CI/CD pipelines using GitHub Actions, Terraform for infrastructure provisioning, and Ansible for configuration management.
 
-Technologies Used:
+Technologies that were Used:
 
 •	Terraform - This Infrastructure as Code (IaC) was used to provision an Azure Virtual Machine.
 •	Ansible - Automates server configuration and Docker installation.
@@ -19,15 +19,15 @@ Terraform Resources Created:
 •	Public IP Address for remote access
 
 Usage:
-#Format the code
+#To Format the code
 terraform fmt
-# Initialize Terraform
+# To Initialize Terraform
 terraform init
-#Check if Everything is Correct
+#To Check if Everything is Correct
 terraform plan 
-#Apply Terraform configuration (approval needed)
+#To Apply Terraform configuration (approval needed)
 terraform apply 
-# Apply Terraform configuration (no approval needed)
+# To Apply Terraform configuration (no approval needed)
 terraform apply -auto-approve
 
 2. Server Configuration (Ansible)
