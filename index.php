@@ -1,4 +1,4 @@
 <?php
-echo "Hi, Welccome to Our Docker App. Thankss ";
+echo "Learn the Command syntax for ansible ";
 ?>
 
