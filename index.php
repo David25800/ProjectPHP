@@ -1,4 +1,4 @@
 <?php
-echo "Hi, Welcome to Our Docker App. Thank you!";
+echo "Hi, Welccome to Our Docker App. Thank you!";
 ?>
 
